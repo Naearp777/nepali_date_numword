@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nepali-date-numword"
+version = "0.1.0"
+description = "Convert numbers and dates into grammatically correct Nepali words."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Arpan Pokharel" }
+]
+maintainers = [
+  { name = "Arpan Pokharel" }
+]
+keywords = ["nepali", "number to words", "bikram sambat", "date conversion", "localization"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Internationalization",
+  "Topic :: Software Development :: Libraries :: Python Modules"
+]
+dependencies = [
+  "bsdatetime>=1.0.1"
+]
+
+[project.urls]
+Homepage = "https://github.com/Naearp777/nepali_date_numword"
+Repository = "https://github.com/Naearp777/nepali_date_numword"
+Issues = "https://github.com/Naearp777/nepali_date_numword/issues"
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2.2",
+  "pytest>=8.0",
+  "twine>=5.1.1"
+]
+
+[project.scripts]
+nepali-date-numword = "nepali_date_numword.cli:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
