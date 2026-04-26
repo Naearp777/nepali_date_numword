@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nepali-date-numword"
-version = "0.1.0"
+version = "0.1.1"
 description = "Convert numbers and dates into grammatically correct Nepali words."
 readme = "README.md"
 requires-python = ">=3.10"
