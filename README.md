@@ -46,7 +46,7 @@ print(number_to_words(123, currency=True))
 # एक सय तेइस रुपैयाँ
 
 print(date_to_words("2024-01-15", calendar="AD"))
-# सन् दुई हजार चौबीस जनवरी पन्ध्र गते
+# सन् दुई हजार चौबीस जनवरी पन्ध्र तारिख
 
 print(date_to_words("2080-10-01", calendar="BS"))
 # वि.सं. दुई हजार अस्सी माघ एक गते
@@ -58,7 +58,7 @@ print(date_to_words("2024-01-15", short=True))
 # १५ जनवरी २०२४
 
 print(text_to_words("I paid Rs. 123 on 2024-01-15."))
-# I paid एक सय तेइस रुपैयाँ on सन् दुई हजार चौबीस जनवरी पन्ध्र गते.
+# I paid एक सय तेइस रुपैयाँ on सन् दुई हजार चौबीस जनवरी पन्ध्र तारिख.
 ```
 
 ## API

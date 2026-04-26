@@ -44,7 +44,8 @@ def _format_words(
         else BS_MONTHS_NEPALI[month]
     )
     prefix = "सन्" if calendar == "AD" else "वि.सं."
-    suffix = " गते" if include_suffix else ""
+    suffix_word = "तारिख" if calendar == "AD" else "गते"
+    suffix = f" {suffix_word}" if include_suffix else ""
     return (
         f"{prefix} {number_to_words(year)} {month_name} "
         f"{number_to_words(day)}{suffix}"

@@ -64,7 +64,7 @@ def test_text_to_words_with_currency_suffix():
 def test_text_to_words_with_date_and_number():
     assert (
         text_to_words("Meeting on 2024-01-15 at room 12.")
-        == "Meeting on सन् दुई हजार चौबीस जनवरी पन्ध्र गते at room बाह्र."
+        == "Meeting on सन् दुई हजार चौबीस जनवरी पन्ध्र तारिख at room बाह्र."
     )
 
 
@@ -79,4 +79,11 @@ def test_text_to_words_with_ad_to_bs_conversion():
     assert (
         text_to_words("Due date is 2024-01-15.", use_bs=True)
         == "Due date is वि.सं. दुई हजार अस्सी माघ एक गते."
+    )
+
+
+def test_text_to_words_with_mixed_ad_and_bs_dates():
+    assert (
+        text_to_words("Meeting on 2024-01-15 and BS date 2080-10-01.")
+        == "Meeting on सन् दुई हजार चौबीस जनवरी पन्ध्र तारिख and BS date वि.सं. दुई हजार अस्सी माघ एक गते."
     )

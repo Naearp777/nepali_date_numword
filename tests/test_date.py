@@ -8,7 +8,7 @@ from nepali_date_numword import date_to_words
 def test_gregorian_date_to_words():
     assert (
         date_to_words("2024-01-15", calendar="AD")
-        == "सन् दुई हजार चौबीस जनवरी पन्ध्र गते"
+        == "सन् दुई हजार चौबीस जनवरी पन्ध्र तारिख"
     )
 
 
@@ -32,7 +32,7 @@ def test_tuple_input_and_suffix_toggle():
 
 def test_datetime_input():
     value = datetime(2024, 1, 15, 10, 30, 0)
-    assert date_to_words(value, calendar="AD") == "सन् दुई हजार चौबीस जनवरी पन्ध्र गते"
+    assert date_to_words(value, calendar="AD") == "सन् दुई हजार चौबीस जनवरी पन्ध्र तारिख"
 
 
 def test_date_object_input():

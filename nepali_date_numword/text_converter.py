@@ -29,12 +29,10 @@ def _detect_calendar_for_date(text: str, start: int, end: int) -> str:
     """Infer whether a matched ISO date token should be treated as AD or BS."""
     year = int(text[start:end].split("-", maxsplit=1)[0])
     context_before = text[max(0, start - 24):start]
-    context_after = text[end:min(len(text), end + 24)]
-    context = f"{context_before} {context_after}"
 
-    if _BS_CONTEXT_PATTERN.search(context):
+    if _BS_CONTEXT_PATTERN.search(context_before):
         return "BS"
-    if _AD_CONTEXT_PATTERN.search(context):
+    if _AD_CONTEXT_PATTERN.search(context_before):
         return "AD"
     if year > 2100:
         return "BS"
