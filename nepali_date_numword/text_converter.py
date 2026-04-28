@@ -15,7 +15,8 @@ _CURRENCY_SUFFIX_PATTERN = re.compile(
     r"(?<!\w)(?P<amount>-?\d[\d,]*(?:\.\d+)?)\s*(?P<suffix>रुपैयाँ|रुपैया|rupees?)\b",
     flags=re.IGNORECASE,
 )
-_NUMBER_PATTERN = re.compile(r"(?<![\w.-])(-?\d[\d,]*(?:\.\d+)?)(?![\w-])")
+_NUMBER_PATTERN = re.compile(r"(?<![\d.])((?:(?<!\w)-)?\d[\d,]*(?:\.\d+)?)(?![\d.])")
+_CLEAN_PATTERN = re.compile(r"[^\w\s.,!?;:()\[\]{}'\"\-@#$।॥\u0900-\u097F]+")
 _BS_CONTEXT_PATTERN = re.compile(r"(BS|B\.S\.|Bikram Sambat|वि\.सं\.)", flags=re.IGNORECASE)
 _AD_CONTEXT_PATTERN = re.compile(r"(AD|A\.D\.|Gregorian|सन्)", flags=re.IGNORECASE)
 
@@ -25,10 +26,13 @@ def _normalize_numeric_token(value: str) -> str:
     return value.replace(",", "")
 
 
-def _detect_calendar_for_date(text: str, start: int, end: int) -> str:
+def _detect_calendar_for_date(match: re.Match) -> str:
     """Infer whether a matched ISO date token should be treated as AD or BS."""
+    text = match.string
+    start = match.start(1)
+    end = match.end(1)
     year = int(text[start:end].split("-", maxsplit=1)[0])
-    context_before = text[max(0, start - 24):start]
+    context_before = text[max(0, start - 24) : start]
 
     if _BS_CONTEXT_PATTERN.search(context_before):
         return "BS"
@@ -42,12 +46,32 @@ def _detect_calendar_for_date(text: str, start: int, end: int) -> str:
 def text_to_words(
     text: str,
     *,
-    use_bs: bool = False,
+    use_bs: bool = True,
     include_suffix: bool = True,
     short_dates: bool = False,
     detect_currency: bool = True,
+    clean_text: bool = False,
 ) -> str:
-    """Convert dates, numbers, and currency amounts embedded in free-form text."""
+    """Convert dates, numbers, and currency amounts embedded in free-form text.
+
+    Parameters
+    ----------
+    text:
+        Input text containing numbers, dates, or currency.
+    use_bs:
+        Convert AD dates to BS.
+    include_suffix:
+        Include 'गते' or 'तारिख' suffixes.
+    short_dates:
+        Use compact date format.
+    detect_currency:
+        Identify and convert Rs./NPR amounts.
+    clean_text:
+        Remove symbols that are not English, Nepali, or standard punctuation.
+    """
+    if clean_text:
+        text = _CLEAN_PATTERN.sub("", text)
+
     converted = text
 
     if detect_currency:
@@ -66,10 +90,11 @@ def text_to_words(
             converted,
         )
 
-    date_replacements: list[tuple[str, str]] = []
-    for index, match in enumerate(_DATE_PATTERN.finditer(converted)):
+    date_replacements: list[str] = []
+
+    def date_replacer(match: re.Match) -> str:
         token = match.group(1)
-        calendar = _detect_calendar_for_date(converted, match.start(1), match.end(1))
+        calendar = _detect_calendar_for_date(match)
         replacement = date_to_words(
             token,
             calendar=calendar,
@@ -77,16 +102,19 @@ def text_to_words(
             include_suffix=include_suffix,
             short=short_dates,
         )
-        placeholder = f"__NDATE_{index}__"
-        date_replacements.append((placeholder, replacement))
-        converted = converted.replace(token, placeholder, 1)
+        placeholder = f"__NDATE_{len(date_replacements)}__"
+        date_replacements.append(replacement)
+        return placeholder
+
+    converted = _DATE_PATTERN.sub(date_replacer, converted)
 
     converted = _NUMBER_PATTERN.sub(
         lambda match: number_to_words(_normalize_numeric_token(match.group(1))),
         converted,
     )
 
-    for placeholder, replacement in date_replacements:
+    for index, replacement in enumerate(date_replacements):
+        placeholder = f"__NDATE_{index}__"
         converted = converted.replace(placeholder, replacement)
 
     return converted
