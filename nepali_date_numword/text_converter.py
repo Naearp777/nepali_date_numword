@@ -15,7 +15,7 @@ _CURRENCY_SUFFIX_PATTERN = re.compile(
     r"(?<!\w)(?P<amount>-?\d[\d,]*(?:\.\d+)?)\s*(?P<suffix>रुपैयाँ|रुपैया|rupees?)\b",
     flags=re.IGNORECASE,
 )
-_NUMBER_PATTERN = re.compile(r"(?<![\d.])((?:(?<!\w)-)?\d[\d,]*(?:\.\d+)?)(?![\d.])")
+_NUMBER_PATTERN = re.compile(r"(?<![\d_])((?:(?<!\w)-)?\d[\d,]*(?:\.\d+)?)(?![\d_])")
 _CLEAN_PATTERN = re.compile(r"[^\w\s.,!?;:()\[\]{}'\"\-@#$।॥\u0900-\u097F]+")
 _BS_CONTEXT_PATTERN = re.compile(r"(BS|B\.S\.|Bikram Sambat|वि\.सं\.)", flags=re.IGNORECASE)
 _AD_CONTEXT_PATTERN = re.compile(r"(AD|A\.D\.|Gregorian|सन्)", flags=re.IGNORECASE)
